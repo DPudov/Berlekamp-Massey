@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="about">О приложении
+    </entry>
+    <entry key="app_name">Архиватор Берлекэмп-Месси
+    </entry>
+    <entry key="change_length">Изменить длину последовательности
+
+    </entry>
+    <entry key="choose_file">Выбрать файл...</entry>
+    <entry key="decode_file">Разархивировать файл...
+    </entry>
+</properties>

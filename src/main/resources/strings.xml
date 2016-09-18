@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<!DOCTYPE properties SYSTEM "http://java.sun.com/dtd/properties.dtd">
+<properties>
+    <entry key="about">About</entry>
+    <entry key="app_name">Berlekamp-Massey archiver</entry>
+    <entry key="change_length">Change linear span</entry>
+    <entry key="choose_file">Choose file...</entry>
+    <entry key="decode_file">Unzip file...</entry>
+</properties>
