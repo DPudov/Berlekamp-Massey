@@ -1,29 +1,19 @@
 package model.utils;
 
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
-import java.io.IOException;
-import java.io.InputStream;
+import java.util.Arrays;
+import java.util.BitSet;
 
 /**
  * Created by ${DPudov} on 11.09.2016.
  */
 public class BytesUtil {
-
-    public static byte[] getFileBytes(String fileName) {
-        byte[] result = new byte[0];
-        try {
-            InputStream fileStream = new FileInputStream(fileName);
-            result = new byte[fileStream.available()];
-            int countOfBytes = fileStream.read(result, 0, fileStream.available());
-            fileStream.close();
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        } catch (IOException e) {
-            e.printStackTrace();
+    public static byte[] createThePolynom(byte[] encoded) {
+        Arrays.sort(encoded);
+        BitSet bitSet = new BitSet(encoded[encoded.length - 1]);
+        for (int i = encoded[encoded.length - 1]; i >= 0; i--) {
+            bitSet.set(i, true);
         }
-
-        return result;
+        return bitSet.toByteArray();
     }
 
     public static String convertByteToBits(byte b) {
@@ -42,5 +32,9 @@ public class BytesUtil {
             builder.append(convertByteToBits(b));
         }
         return builder.toString();
+    }
+
+    public static int getLengthOfBits(byte[] bytes) {
+        return bytes.length * 8;
     }
 }

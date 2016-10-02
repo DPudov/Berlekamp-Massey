@@ -1,7 +1,7 @@
 import model.Encoder;
-import model.utils.BytesUtil;
+import model.FileManager;
 
-import java.util.Arrays;
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -10,10 +10,16 @@ import java.util.Date;
 public class Main {
     public static void main(String[] args) {
         Date d1 = new Date();
-        byte[] bytes = BytesUtil.getFileBytes("C:\\Users\\DPudov\\Git\\ReleaseNotes.html");
 
-        Encoder.getFunctionFeedback(Encoder.useBerlekampMassey(Arrays.copyOfRange(bytes, 0, 255)));
+        try {
+            Encoder.getInstance().encode("C:\\Users\\DPudov\\Git\\ReleaseNotes.html", (short) 256);
+            FileManager.getInstance().writePolynomialToFile("Somefile");
+            FileManager.getInstance().getPolynomialsFromFile("C:\\Users\\мвидео\\IdeaProjects\\Berlekamp-Massey\\Somefile.bma");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
         Date d2 = new Date();
+
         System.out.println((d2.getTime() - d1.getTime()) + " success");
     }
 

@@ -1,12 +1,15 @@
+import model.BMAlgorithm;
+import model.Decoder;
 import model.Encoder;
-import model.utils.BytesUtil;
+import model.PolynomialStorage;
 import model.utils.StringsUtil;
 import org.junit.Test;
 
+import java.io.IOException;
+import java.util.Arrays;
+
 import static junit.framework.TestCase.assertEquals;
-import static model.Encoder.*;
 import static model.Encoder.getFunctionFeedback;
-import static model.utils.BytesUtil.convertByteToBits;
 import static model.utils.BytesUtil.convertBytesToBits;
 
 /**
@@ -58,24 +61,25 @@ public class RegistryTest {
     public void berMastest()
 
     {
-        byte[] array = {0, 1};
-        byte[] array1 = {1, 1, 0, 1};
-        byte[] array2 = {0, 1, 1, 1, 0, 1};
-        byte[] array3 = {0, 1, 1, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1};
-        byte[] array4 = {0, 1, 0, 1, 0};
+        byte[] array = {1, 0, 1};
+        byte[] array1 = {0, 0, 0, 1, 0, 1, 0, 0, 1, 1, 1, 0, 0};
+        byte[] array2 = {1, 1, 0, 1, 1, 0, 1};
+        byte[] array3 = {0, 0, 1, 0, 0, 1, 0, 0, 1};
+        byte[] array4 = {1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0};
 
-        getFunctionFeedback(useBerlekampMassey(array));
-        getFunctionFeedback(useBerlekampMassey(array1));
-        getFunctionFeedback(useBerlekampMassey(array2));
-        getFunctionFeedback(useBerlekampMassey(array3));
-        getFunctionFeedback(useBerlekampMassey(array4));
+        getFunctionFeedback(new BMAlgorithm(array).useBerlekampMassey());
+        getFunctionFeedback(new BMAlgorithm(array1).useBerlekampMassey());
+//        getFunctionFeedback(useBerlekampMassey(array2));
+//        getFunctionFeedback(useBerlekampMassey(array3));
+//        getFunctionFeedback(useBerlekampMassey(array4));
 
     }
+
     @Test
-    public void testConvert(){
+    public void testConvert() {
         byte[] array1 = {0, 1, 0, 1};
         byte[] array2 = {0, 1, 0, 1, 0, 1};
-        byte[] array3 = {0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1};
+        byte[] array3 = {1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1};
         byte[] array4 = {0, 1, 0, 1, 0};
         assertEquals(convertBytesToBits(array1), "0101");
         assertEquals(convertBytesToBits(array2), "010101");
@@ -83,9 +87,21 @@ public class RegistryTest {
         assertEquals(convertBytesToBits(array4), "01010");
 
     }
+
     @Test
-    public void booleanToString(){
+    public void booleanToString() {
         boolean[] booleen = {false, false, false, true, false, true, false};
         assertEquals(StringsUtil.bitsArrayToString(booleen), "1010");
+    }
+
+    @Test
+    public void generateBinarySequence() {
+        try {
+            Encoder.getInstance().encode("C:\\Users\\DPudov\\Git\\ReleaseNotes.html", (short) 256);
+            System.out.println(Arrays.toString(Decoder.getInstance().generateBinarySequenceForOne(PolynomialStorage.getInstance().get(0))));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
     }
 }
