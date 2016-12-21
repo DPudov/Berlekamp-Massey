@@ -3,19 +3,29 @@ package model;
 import java.io.Serializable;
 import java.util.ArrayList;
 
-/**
- * Created by ${DPudov} on 19.09.2016.
- */
-public class PolynomialStorage extends ArrayList<Polynomial> implements Serializable{
-    private static PolynomialStorage ourInstance = new PolynomialStorage();
 
-    public static PolynomialStorage getInstance() {
-        return ourInstance;
+public class PolynomialStorage extends ArrayList<Polynomial> implements Serializable {
+    private int field;
+    public void clearData() {
+        this.clear();
     }
 
-    public PolynomialStorage() {
+    public void packAll() {
+        for (Polynomial p : this) {
+            p.pack();
+        }
     }
-    public void clearData(){
-        ourInstance.clear();
+    public void unpackAll(){
+        for (Polynomial p: this){
+            p.unpack();
+        }
+    }
+
+    public int getField() {
+        return field;
+    }
+
+    public void setField(int field) {
+        this.field = field;
     }
 }

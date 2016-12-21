@@ -7,6 +7,8 @@ import java.util.BitSet;
  * Created by ${DPudov} on 11.09.2016.
  */
 public class BytesUtil {
+
+
     public static byte[] createThePolynom(byte[] encoded) {
         Arrays.sort(encoded);
         BitSet bitSet = new BitSet(encoded[encoded.length - 1]);
@@ -36,5 +38,23 @@ public class BytesUtil {
 
     public static int getLengthOfBits(byte[] bytes) {
         return bytes.length * 8;
+    }
+
+    public static byte[] packArray(byte[] bytes) {
+
+        BitSet set = new BitSet();
+        for (int i = 0; i < bytes.length; i++) {
+            set.set(i, bytes[i] == 1);
+        }
+        return set.toByteArray();
+    }
+
+    public static byte[] unpackArray(byte[] bytes) {
+        byte[] result = new byte[bytes.length * 8];
+        BitSet set = BitSet.valueOf(bytes);
+        for (int i = 0; i < result.length; i++) {
+            result[i] = (byte) (set.get(i) ? 1 : 0);
+        }
+        return result;
     }
 }

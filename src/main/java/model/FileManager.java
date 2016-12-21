@@ -6,36 +6,38 @@ import java.io.*;
  * Created by ${DPudov} on 21.09.2016.
  */
 public class FileManager {
-    private static FileManager ourInstance = new FileManager();
+
     private String fileDirectory = "";
     private final static String FILE_EXTENSION = ".bma";
 
-    public static FileManager getInstance() {
-        return ourInstance;
-    }
-
-    private FileManager() {
-    }
-
-    public void writePolynomialToFile(String filename) throws IOException {
-        System.out.println(PolynomialStorage.getInstance().size());
+    public void writePolynomialToFile(String filename, PolynomialStorage polynomials) throws IOException {
         //open stream
         ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fileDirectory + filename + FILE_EXTENSION));
-        os.writeObject(PolynomialStorage.getInstance());
-
+        polynomials.packAll();
+        os.writeObject(polynomials);
         //close stream
         os.close();
 
         //clear polynomial storage
-        PolynomialStorage.getInstance().clearData();
+        polynomials.clearData();
     }
 
     public PolynomialStorage getPolynomialsFromFile(String filePath) throws IOException, ClassNotFoundException {
         ObjectInputStream is = new ObjectInputStream(new FileInputStream(filePath));
-        PolynomialStorage decodedObj = (PolynomialStorage) is.readObject();
-        System.out.println(decodedObj.size());
+        PolynomialStorage result = (PolynomialStorage) is.readObject();
+        result.unpackAll();
         is.close();
-        return decodedObj;
+        return result;
+    }
+
+    public void writeDearchivedFile(String filePath, PolynomialStorage polynomials) throws IOException {
+        FileOutputStream outputStream = new FileOutputStream(filePath, true);
+        Decoder decoder = new Decoder();
+        for (Polynomial p : polynomials) {
+            byte[] b = decoder.generateBytesForOne(p);
+            outputStream.write(b);
+        }
+        outputStream.close();
     }
 
     public void setFileDirectory(String fileDirectory) {

@@ -1,68 +1,60 @@
 package model;
 
-import model.utils.BytesUtil;
-
 import java.util.BitSet;
+import java.util.HashSet;
+import java.util.Iterator;
+import java.util.Set;
 
 /**
- * Created by ${DPudov} on 13.09.2016.
+ * Class for a dearchivation.
  */
 public class Decoder {
-    private static Decoder ourInstance = new Decoder();
-
-    public static Decoder getInstance() {
-        return ourInstance;
-    }
-
-    private Decoder() {
-    }
-
 
     /**
      * Method that produces binary sequence from polynomial.
      *
      * @return bytes from BitSet(binary sequence)
      */
-    public byte[] generateBinarySequenceForOne(Polynomial polynomial) {
-        short length = polynomial.getLength();
-        BitSet initialState = BitSet.valueOf(polynomial.getInitialState());
-        BitSet result = new BitSet(length);
-        BitSet feedback = bitSetFromBinaryBytes(polynomial.getFeedbackArray());
-        int period = polynomial.getPeriodOfFunction();
-        //If the period is less than the length of binary sequence
-        //we just copy sequence period times
-        if (period < length) {
-            int wholeCount = length / period;
-            BitSet periodical = new BitSet(period);
-            periodical.or(initialState);
-            for (int i = initialState.length() - 1; i < period; i++) {
-                generateNextBit(initialState.length() + i, periodical);
-            }
-            for (int i = period; i < length; i++) {
-                result.set(period + i, periodical.get((i % period)));
-            }
+    byte[] generateBytesForOne(Polynomial polynomial) {
+        //initialization
+        int length = polynomial.getLength();
+        byte[] result = null;
+        byte[] initState = polynomial.getInitialState();
+        BitLine bitLine = new BitLine(BitSet.valueOf(initState));
+        for (int i = 0; i < length * 8; i++) {
+            bitLine.set(i + bitLine.toByteArray().length * 8,
+                    generateNextBit(polynomial, bitLine));
 
-        } else {
-            result.or(initialState);
-            for (int i = 0; i < length; i++) {
-                generateNextBit(initialState.length() + i, result);
-            }
         }
-
-
-        return result.toByteArray();
+        result = bitLine.toByteArray();
+        return result;
     }
 
-    private void generateNextBit(int position, BitSet periodicalSet) {
-
-
+    private boolean generateNextBit(Polynomial polynomial, BitLine previousPeriod) {
+        return previousPeriod.xorForTaps(getTaps(polynomial));
     }
 
-    private BitSet bitSetFromBinaryBytes(byte[] bytes) {
-        String bits = BytesUtil.convertBytesToBits(bytes);
-        BitSet res = new BitSet(bits.length());
-        for (int i = 0; i < bits.length(); i++) {
-            res.set(i, bits.charAt(i) == '1');
+    /**
+     * Period of function is 2^N-1.
+     * N - linear span of function
+     *
+     * @param linearSpan represents linearSpan for current function.
+     * @return period.
+     */
+    private int getPeriodOfFunction(int linearSpan) {
+        return (1 << linearSpan) - 1;
+    }
+
+    private int[] getTaps(Polynomial polynomial) {
+        Set<Integer> taps = new HashSet<>();
+        for (int i : polynomial.getFeedbackArray()) {
+            if (i != 0)
+                taps.add(i);
+        }
+        int[] res = new int[taps.size()];
+        Iterator<Integer> iterator = taps.iterator();
+        for (int i = 0; i < taps.size(); i++) {
+            res[i] = iterator.next();
         }
         return res;
     }

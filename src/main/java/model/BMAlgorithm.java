@@ -1,7 +1,6 @@
 package model;
 
 import com.sun.istack.internal.NotNull;
-import model.utils.BytesUtil;
 
 import java.util.BitSet;
 
@@ -11,9 +10,6 @@ import java.util.BitSet;
 public class BMAlgorithm {
     //parameters
     private int linearSpan;
-    private int countN;
-    private int m;
-    private int d;
     private byte[] buf;
     private byte[] temp;
     private byte[] result;
@@ -26,31 +22,35 @@ public class BMAlgorithm {
      * @param bytesForBits Bytes that will be converted in bits line
      */
     public BMAlgorithm(@NotNull byte[] bytesForBits) {
-        n = BytesUtil.getLengthOfBits(bytesForBits);
         bits = BitSet.valueOf(bytesForBits);
-        result = new byte[n];
-        temp = new byte[n];
-        buf = new byte[n];
+        n = bits.size();
+        if (n != 0) {
+            result = new byte[n];
+            temp = new byte[n];
+            buf = new byte[n];
+        }
     }
+
 
     /**
      * Main method of class. It returns byte array that describe linear feedback
-     * after Berlekamp-Massey algorithm
+     * after Berlekamp-Massey algorithm for binary field
      *
-     * @return byte array that keeps feedback. Positions with 1 are power of
+     * @return NOTE! Byte array contains NUMBERS FROM -128 to 127!!! Before reading find positions with 1 or 0!!!
+     * Byte array that keeps feedback. Positions with 1 are power of
      * polynomial. E.g. linearFeedback[4] = 1 means, that there is x^4.
      */
-    public byte[] useBerlekampMassey() {
+    public byte[] forBinaryField() {
         //initialization
         buf[0] = 1;
         result[0] = 1;
-        countN = 0;
+        int countN = 0;
         linearSpan = 0;
-        m = -1;
+        int m = -1;
 
         //algorithm
         for (; countN < n; countN++) {
-            d = bits.get(countN) ? 1 : 0;
+            int d = bits.get(countN) ? 1 : 0;
             for (int i = 1; i <= linearSpan; i++)
                 d ^= result[i] & (bits.get(countN - i) ? 1 : 0);
             if (d == 1) {
@@ -64,15 +64,31 @@ public class BMAlgorithm {
                 }
             }
         }
+
         return result;
+    }
+
+    /**
+     * use for field 256
+     *
+     * @return feedback function
+     */
+    public byte[] forByteField() {
+
+        return null;
+    }
+
+    public byte[] forArbitraryField(int field) {
+        return null;
     }
     //getters
 
     /**
      * Just a getter of linear span
+     *
      * @return linear span of feedback polynomial
      */
-    public int getLinearSpan() {
+    int getLinearSpan() {
         return linearSpan;
     }
 }

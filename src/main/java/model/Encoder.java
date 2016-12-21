@@ -1,7 +1,5 @@
 package model;
 
-import model.utils.BytesUtil;
-
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
@@ -12,14 +10,9 @@ import java.util.Arrays;
  * Created by ${DPudov} on 13.09.2016.
  */
 public class Encoder {
-    private static Encoder ourInstance = new Encoder();
     private final static String LINEAR_SPAN = "Linear span = ";
 
-    public static Encoder getInstance() {
-        return ourInstance;
-    }
-
-    private Encoder() {
+    public Encoder() {
     }
 
     /**
@@ -27,20 +20,28 @@ public class Encoder {
      * 2. Use Berlekamp-Massey
      * 3. Write bytes to new file
      **/
-    public void encode(String filePath, short lengthOfPolynomial) throws IOException {
+    public PolynomialStorage encode(String filePath, int lengthOfBuffer, int field) throws IOException {
+        //open stream
         InputStream is = new BufferedInputStream(new FileInputStream(filePath));
+        //init variables
+        PolynomialStorage result = new PolynomialStorage();
+        result.setField(field);
         BMAlgorithm algorithm;
+        //read data
+
         while (is.available() != 0) {
-            byte[] buffer = new byte[lengthOfPolynomial];
+            byte[] buffer = new byte[lengthOfBuffer];
+            int b = is.read(buffer);
             algorithm = new BMAlgorithm(buffer);
-            is.read(buffer, 0, lengthOfPolynomial - 1);
-            byte[] polynom = BytesUtil.createThePolynom(algorithm.useBerlekampMassey());
-            Polynomial p = new Polynomial(polynom, lengthOfPolynomial, algorithm.getLinearSpan());
-            p.setInitialState(Arrays.copyOfRange(buffer, 0, algorithm.getLinearSpan() - 1));
-            PolynomialStorage.getInstance().add(p);
+            Polynomial p = new Polynomial(algorithm.forBinaryField(),
+                    b,
+                    algorithm.getLinearSpan());
+            p.setInitialState(Arrays.copyOfRange(buffer, 0, ((algorithm.getLinearSpan() + 7) / 8)));
+            result.add(p);
+
         }
         is.close();
-
+        return result;
     }
 
     public static String getFunctionFeedback(byte[] feedbackArray) {
