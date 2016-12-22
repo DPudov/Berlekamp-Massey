@@ -1,4 +1,7 @@
-package model;
+package model.binary;
+
+import model.BitLine;
+import model.polynomials.Polynomial;
 
 import java.util.BitSet;
 import java.util.HashSet;
@@ -15,7 +18,7 @@ public class Decoder {
      *
      * @return bytes from BitSet(binary sequence)
      */
-    byte[] generateBytesForOne(Polynomial polynomial) {
+    public byte[] generateBytesForOne(Polynomial polynomial) {
         //initialization
         int length = polynomial.getLength();
         byte[] result = null;

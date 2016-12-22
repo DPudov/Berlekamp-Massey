@@ -1,6 +1,6 @@
 package logic;
 
-import model.Polynomial;
+import model.polynomials.Polynomial;
 
 /**
  * Created by ${DPudov} on 05.12.2016.

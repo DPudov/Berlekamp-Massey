@@ -1,4 +1,8 @@
-package model;
+package model.binary;
+
+import model.BMAlgorithm;
+import model.polynomials.Polynomial;
+import model.polynomials.PolynomialStorage;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;

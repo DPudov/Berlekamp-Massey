@@ -1,4 +1,4 @@
-package model;
+package model.polynomials;
 
 import model.utils.BytesUtil;
 

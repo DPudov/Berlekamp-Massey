@@ -88,7 +88,7 @@ public class BMAlgorithm {
      *
      * @return linear span of feedback polynomial
      */
-    int getLinearSpan() {
+    public int getLinearSpan() {
         return linearSpan;
     }
 }

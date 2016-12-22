@@ -1,4 +1,4 @@
-package model;
+package model.binary;
 
 import logic.AbstractDecoder;
 

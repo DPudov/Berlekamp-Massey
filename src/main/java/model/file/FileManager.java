@@ -1,4 +1,6 @@
-package model;
+package model.file;
+
+import logic.AbstractArchivedFile;
 
 import java.io.*;
 
@@ -10,7 +12,21 @@ public class FileManager {
     private String fileDirectory = "";
     private final static String FILE_EXTENSION = ".bma";
 
-    public void writePolynomialToFile(String filename, PolynomialStorage polynomials) throws IOException {
+    public void writeArchivedFile(AbstractArchivedFile file) throws IOException {
+        ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fileDirectory
+                + file.getFileName() + FILE_EXTENSION));
+        os.writeObject(file);
+        os.close();
+    }
+
+    public BinaryArchivedFile readFile(String path) throws IOException, ClassNotFoundException {
+        ObjectInputStream is = new ObjectInputStream(new FileInputStream(path));
+        BinaryArchivedFile result = (BinaryArchivedFile) is.readObject();
+        is.close();
+        return result;
+    }
+
+    /*public void writePolynomialToFile(String filename, PolynomialStorage polynomials) throws IOException {
         //open stream
         ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fileDirectory + filename + FILE_EXTENSION));
         polynomials.packAll();
@@ -42,5 +58,5 @@ public class FileManager {
 
     public void setFileDirectory(String fileDirectory) {
         this.fileDirectory = fileDirectory;
-    }
+    }*/
 }

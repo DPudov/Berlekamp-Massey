@@ -1,4 +1,4 @@
-package model;
+package model.polynomials;
 
 import java.io.Serializable;
 import java.util.ArrayList;
