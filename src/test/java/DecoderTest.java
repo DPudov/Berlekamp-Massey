@@ -15,4 +15,8 @@ public class DecoderTest {
     public void polynomialDecodeTest(){
 
     }
+    @Test
+    public void decodeOnePolynomialTest(){
+
+    }
 }

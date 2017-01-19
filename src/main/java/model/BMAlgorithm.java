@@ -2,6 +2,7 @@ package model;
 
 import com.sun.istack.internal.NotNull;
 
+import java.util.Arrays;
 import java.util.BitSet;
 
 /**
@@ -23,7 +24,8 @@ public class BMAlgorithm {
      */
     public BMAlgorithm(@NotNull byte[] bytesForBits) {
         bits = BitSet.valueOf(bytesForBits);
-        n = bits.size();
+        System.out.println(bits);
+        n = bits.length();
         if (n != 0) {
             result = new byte[n];
             temp = new byte[n];
@@ -42,30 +44,32 @@ public class BMAlgorithm {
      */
     public byte[] forBinaryField() {
         //initialization
-        buf[0] = 1;
-        result[0] = 1;
-        int countN = 0;
-        linearSpan = 0;
-        int m = -1;
+        if (buf != null && result != null) {
+            buf[0] = 1;
+            result[0] = 1;
+            int countN = 0;
+            linearSpan = 0;
+            int m = -1;
 
-        //algorithm
-        for (; countN < n; countN++) {
-            int d = bits.get(countN) ? 1 : 0;
-            for (int i = 1; i <= linearSpan; i++)
-                d ^= result[i] & (bits.get(countN - i) ? 1 : 0);
-            if (d == 1) {
-                System.arraycopy(result, 0, temp, 0, n);
-                for (int i = 0; (i + countN - m) < n; i++)
-                    result[i + countN - m] ^= buf[i];
-                if (linearSpan <= (countN / 2)) {
-                    linearSpan = countN + 1 - linearSpan;
-                    m = countN;
-                    System.arraycopy(temp, 0, buf, 0, n);
+            //algorithm
+            for (; countN < n; countN++) {
+                int d = bits.get(countN) ? 0b1 : 0b0;
+                for (int i = 1; i <= linearSpan; i++)
+                    d ^= result[i] & (bits.get(countN - i) ? 0b1 : 0b0);
+                if (d == 1) {
+                    System.arraycopy(result, 0, temp, 0, n);
+                    for (int i = 0; (i + countN - m) < n; i++)
+                        result[i + countN - m] ^= buf[i];
+                    if (linearSpan <= (countN / 2)) {
+                        linearSpan = countN + 1 - linearSpan;
+                        m = countN;
+                        System.arraycopy(temp, 0, buf, 0, n);
+                    }
                 }
             }
         }
-
-        return result;
+        System.out.println("Lin span = " + linearSpan);
+        return result != null ? Arrays.copyOfRange(result, 0, linearSpan + 1) : new byte[0];
     }
 
     /**

@@ -1,6 +1,10 @@
 package model.file;
 
 import logic.AbstractArchivedFile;
+import model.binary.BinaryArchivedFile;
+import model.binary.Decoder;
+import model.polynomials.Polynomial;
+import model.polynomials.PolynomialStorage;
 
 import java.io.*;
 
@@ -26,6 +30,17 @@ public class FileManager {
         return result;
     }
 
+    public void writeDearchivedFile(String fileName, PolynomialStorage storage) throws IOException {
+        OutputStream outputStream = new FileOutputStream(fileName);
+        storage.unpackAll();
+        Decoder decoder = new Decoder();
+        for (Polynomial p: storage){
+            byte[] bytes = decoder.generateBytesForOne(p);
+            outputStream.write(bytes);
+        }
+        outputStream.close();
+
+    }
     /*public void writePolynomialToFile(String filename, PolynomialStorage polynomials) throws IOException {
         //open stream
         ObjectOutputStream os = new ObjectOutputStream(new FileOutputStream(fileDirectory + filename + FILE_EXTENSION));

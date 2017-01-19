@@ -37,4 +37,5 @@ public class BytesTest {
         return (arr[index] >> bitPosition & 1) == 1;
     }
 
+
 }

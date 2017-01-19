@@ -3,7 +3,6 @@ package model.binary;
 import logic.AbstractArchivedFile;
 import logic.AbstractArchiver;
 import model.file.ArchiveModes;
-import model.file.BinaryArchivedFile;
 import model.file.FileManager;
 import model.polynomials.PolynomialStorage;
 
@@ -29,12 +28,12 @@ public class BinaryArchiver extends AbstractArchiver {
     }
 
     @Override
-    protected void archiveFile(String filePath, int archiveMode) throws IOException {
+    public void archiveFile(String filePath, int archiveMode) throws IOException {
         switch (archiveMode) {
             case ArchiveModes.MODE_BINARY:
                 Encoder encoder = new Encoder();
                 File file = new File(filePath);
-                PolynomialStorage polynomials = encoder.encode(file.getPath(), 256, ArchiveModes.MODE_BINARY);
+                PolynomialStorage polynomials = encoder.encode(file.getPath(), 512, ArchiveModes.MODE_BINARY);
                 polynomials.packAll();
                 AbstractArchivedFile archivedFile = createFile(file.getName(), getFileExtension(file), polynomials, ArchiveModes.MODE_BINARY);
                 FileManager manager = new FileManager();
@@ -45,9 +44,10 @@ public class BinaryArchiver extends AbstractArchiver {
     }
 
     @Override
-    protected AbstractArchivedFile dearchiveFile(String filePath) throws IOException, ClassNotFoundException {
+    public void dearchiveFile(String filePath) throws IOException, ClassNotFoundException {
         FileManager manager = new FileManager();
-        return manager.readFile(filePath);
+        BinaryArchivedFile archivedFile = manager.readFile(filePath);
+        manager.writeDearchivedFile(archivedFile.getFileName(), archivedFile.getPolynomialStorage());
     }
 
     //метод определения расширения файла

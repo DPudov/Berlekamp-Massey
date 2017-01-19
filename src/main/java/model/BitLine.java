@@ -9,7 +9,8 @@ public class BitLine extends BitSet {
     public BitLine(int length) {
         super(length);
     }
-    public BitLine(BitSet set){
+
+    public BitLine(BitSet set) {
         super(set.size());
         this.or(set);
     }
@@ -18,11 +19,14 @@ public class BitLine extends BitSet {
         this.or(BitSet.valueOf(bytesForBits));
     }
 
-    public boolean xorForTaps(int[] taps) {
-        byte buf = 0;
-        for (int i : taps) {
-            buf += this.get(i) ? 1 : 0;
+    public boolean xorForTaps(byte[] taps) {
+        int tapsLength = taps.length;
+        int sum = 0;
+        for (int i = 0; i < tapsLength; i++) {
+            if (taps[i] == 1) {
+                sum += this.get(i) ? 1 : 0;
+            }
         }
-        return buf % 2 == 1;
+        return sum % 2 == 1;
     }
 }

@@ -36,12 +36,18 @@ public class Encoder {
         while (is.available() != 0) {
             byte[] buffer = new byte[lengthOfBuffer];
             int b = is.read(buffer);
-            algorithm = new BMAlgorithm(buffer);
-            Polynomial p = new Polynomial(algorithm.forBinaryField(),
-                    b,
-                    algorithm.getLinearSpan());
-            p.setInitialState(Arrays.copyOfRange(buffer, 0, ((algorithm.getLinearSpan() + 7) / 8)));
-            result.add(p);
+            if (b != 0) {
+                algorithm = new BMAlgorithm(buffer);
+                byte[] feedback = algorithm.forBinaryField();
+                System.out.println(Arrays.toString(feedback));
+                System.out.println(algorithm.getLinearSpan());
+                Polynomial p = new Polynomial(feedback,
+                        b,
+                        algorithm.getLinearSpan());
+                p.setInitState(Arrays.copyOfRange(buffer, 0, feedback.length  - 1));
+                //p.setInitialState(Arrays.copyOfRange(buffer, 0, ((algorithm.getLinearSpan() + 7) / 8)));
+                result.add(p);
+            }
 
         }
         is.close();

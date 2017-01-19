@@ -1,3 +1,7 @@
+import model.binary.BinaryArchiver;
+import model.file.ArchiveModes;
+
+import java.io.IOException;
 import java.util.Date;
 
 /**
@@ -6,6 +10,15 @@ import java.util.Date;
 public class Main {
     public static void main(String[] args) {
         Date d1 = new Date();
+        Date date = null;
+        BinaryArchiver binaryArchiver = new BinaryArchiver();
+        try {
+            binaryArchiver.archiveFile("C:\\Users\\DPudov\\Git\\ReleaseNotes.html", ArchiveModes.MODE_BINARY);
+            date = new Date();
+            binaryArchiver.dearchiveFile("C:\\Users\\мвидео\\IdeaProjects\\Berlekamp-Massey\\ReleaseNotes.html.bma");
+        } catch (IOException | ClassNotFoundException e) {
+            e.printStackTrace();
+        }
        /* Encoder encoder = new Encoder();
         FileManager fileManager = new FileManager();
         try {
@@ -19,7 +32,7 @@ public class Main {
 
         Date d2 = new Date();
 
-        System.out.println((d2.getTime() - d1.getTime())/1000 + " seconds");
+        System.out.println((date.getTime() - d1.getTime()) + " milliseconds");
     }
 
 

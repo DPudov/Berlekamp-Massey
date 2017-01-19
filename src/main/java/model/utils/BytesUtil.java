@@ -43,8 +43,10 @@ public class BytesUtil {
     public static byte[] packArray(byte[] bytes) {
 
         BitSet set = new BitSet();
-        for (int i = 0; i < bytes.length; i++) {
-            set.set(i, bytes[i] == 1);
+        if (bytes != null) {
+            for (int i = 0; i < bytes.length; i++) {
+                set.set(i, bytes[i] == 1);
+            }
         }
         return set.toByteArray();
     }

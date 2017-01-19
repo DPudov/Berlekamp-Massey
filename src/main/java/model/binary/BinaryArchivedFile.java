@@ -1,4 +1,4 @@
-package model.file;
+package model.binary;
 
 import logic.AbstractArchivedFile;
 import model.polynomials.PolynomialStorage;

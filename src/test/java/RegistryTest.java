@@ -3,6 +3,7 @@ import model.utils.StringsUtil;
 import org.junit.Test;
 
 import java.util.Arrays;
+import java.util.BitSet;
 
 import static junit.framework.TestCase.assertEquals;
 import static model.utils.BytesUtil.convertBytesToBits;
@@ -56,14 +57,15 @@ public class RegistryTest {
     public void berMastest()
 
     {
-        byte[] array = {85, 5};
-        byte[] array1 = {-127, -127};
-        byte[] array2 = {1, 1, 0, 1, 1, 0, 1};
+        byte[] array = {0b1010101, 0b1010101, 0b1010101, 0b1010101};
+        byte[] array1 = {0b11111111111111111111111111111111, 0b11111111111111111111111111111111, 0b11111111111111111111111111111111, 0b11111111111111111111111111111111, 0b11111111111111111111111111111111};
+        byte[] array2 = {0b001000001, 0b0001001101};
         byte[] array3 = {0, 0, 1, 0, 0, 1, 0, 0, 1};
         byte[] array4 = {1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0};
 
         System.out.println(Arrays.toString(new BMAlgorithm(array).forBinaryField()));
         System.out.println(Arrays.toString(new BMAlgorithm(array1).forBinaryField()));
+        System.out.println(Arrays.toString(new BMAlgorithm(array2).forBinaryField()));
 //        getFunctionFeedback(forBinaryField(array2));
 //        getFunctionFeedback(forBinaryField(array3));
 //        getFunctionFeedback(forBinaryField(array4));
@@ -80,6 +82,14 @@ public class RegistryTest {
         assertEquals(convertBytesToBits(array2), "010101");
         assertEquals(convertBytesToBits(array3), "01010101010101");
         assertEquals(convertBytesToBits(array4), "01010");
+
+    }
+
+    @Test
+    public void xorY() {
+        BitSet f = BitSet.valueOf(new byte[]{0, 41, 37});
+        f.flip(0);
+        System.out.println();
 
     }
 

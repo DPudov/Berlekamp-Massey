@@ -5,9 +5,10 @@ import model.utils.BytesUtil;
 import java.io.Serializable;
 
 public class Polynomial implements Serializable {
+    private byte[] initState;
     private byte[] feedbackArray;
     private int length;
-    private byte[] initialState;
+    //private byte[] initialState;
     private int linearSpan;
 
     /**
@@ -31,13 +32,14 @@ public class Polynomial implements Serializable {
         return length;
     }
 
-    public byte[] getInitialState() {
-        return initialState;
+    public byte[] getInitState() {
+        return initState;
     }
 
-    public void setInitialState(byte[] initialState) {
-        this.initialState = initialState;
+    public void setInitState(byte[] initState) {
+        this.initState = initState;
     }
+
 
     public int getLinearSpan() {
         return linearSpan;
@@ -45,7 +47,7 @@ public class Polynomial implements Serializable {
 
     // pack e.g.{0, 1, 0, 1} into {5}
     public void pack() {
-        initialState = BytesUtil.packArray(initialState);
+     //   initialState = BytesUtil.packArray(initialState);
         feedbackArray = BytesUtil.packArray(feedbackArray);
     }
 

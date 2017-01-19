@@ -8,7 +8,7 @@ import model.polynomials.Polynomial;
 public abstract class AbstractDecoder {
 
     public byte[] decodePolynomial(Polynomial which) {
-        byte[] initState = which.getInitialState();
+        byte[] initState = which.getFeedbackArray();
         int resSize = which.getLength();
         byte[] result = new byte[resSize];
         System.arraycopy(initState, 0, result, 0, initState.length);

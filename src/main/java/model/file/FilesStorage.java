@@ -1,5 +1,7 @@
 package model.file;
 
+import model.binary.BinaryArchivedFile;
+
 import java.util.HashMap;
 import java.util.Map;
 

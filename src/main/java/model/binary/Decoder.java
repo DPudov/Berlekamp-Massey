@@ -4,9 +4,6 @@ import model.BitLine;
 import model.polynomials.Polynomial;
 
 import java.util.BitSet;
-import java.util.HashSet;
-import java.util.Iterator;
-import java.util.Set;
 
 /**
  * Class for a dearchivation.
@@ -22,19 +19,42 @@ public class Decoder {
         //initialization
         int length = polynomial.getLength();
         byte[] result = null;
-        byte[] initState = polynomial.getInitialState();
-        BitLine bitLine = new BitLine(BitSet.valueOf(initState));
-        for (int i = 0; i < length * 8; i++) {
-            bitLine.set(i + bitLine.toByteArray().length * 8,
-                    generateNextBit(polynomial, bitLine));
-
+        byte[] initState = polynomial.getInitState();
+        BitSet set = BitSet.valueOf(initState);
+        int[] taps = getTaps(polynomial);
+        int q = set.length();
+        for (int i = q; i < length * 8 - 2; i++) {
+            int sum = 0;
+            for (int b : taps) {
+                sum += set.get(b) ? 1 : 0;
+            }
+            boolean next = sum % 2 == 1;
+            //move right
+            //set first bit
+            set = moveRightAndSet(set, next);
         }
-        result = bitLine.toByteArray();
+        /*BitLine bitLine = new BitLine(BitSet.valueOf(initState));
+        for (int i = bitLine.length(); i < length * 8; i++) {
+
+            bitLine.set(i,
+                    generateNextBit(feedback, new BitLine(bitLine.get(i - initState.length, i - 1))));
+
+        }*/
+        result = set.toByteArray();
         return result;
     }
 
-    private boolean generateNextBit(Polynomial polynomial, BitLine previousPeriod) {
-        return previousPeriod.xorForTaps(getTaps(polynomial));
+    private BitSet moveRightAndSet(BitSet set, boolean first) {
+        BitSet result = new BitSet();
+        result.set(0, first);
+        for (int i = 0; i < set.length(); i++) {
+            result.set(i + 1, set.get(i));
+        }
+        return result;
+    }
+
+    private boolean generateNextBit(byte[] taps, BitLine previousPeriod) {
+        return previousPeriod.xorForTaps(taps);
     }
 
     /**
@@ -49,16 +69,21 @@ public class Decoder {
     }
 
     private int[] getTaps(Polynomial polynomial) {
-        Set<Integer> taps = new HashSet<>();
-        for (int i : polynomial.getFeedbackArray()) {
-            if (i != 0)
-                taps.add(i);
+        byte[] feedback = polynomial.getFeedbackArray();
+        int counter = 0;
+        for (int i = 0; i < feedback.length; i++) {
+            if (feedback[i] == 1) {
+                counter++;
+            }
         }
-        int[] res = new int[taps.size()];
-        Iterator<Integer> iterator = taps.iterator();
-        for (int i = 0; i < taps.size(); i++) {
-            res[i] = iterator.next();
+        int[] taps = new int[counter];
+        int c = 0;
+        for (int i = 0; i < feedback.length; i++) {
+            if (feedback[i] == 1) {
+                taps[c] = i;
+                c++;
+            }
         }
-        return res;
+        return taps;
     }
 }

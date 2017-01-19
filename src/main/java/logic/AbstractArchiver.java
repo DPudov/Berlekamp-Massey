@@ -16,6 +16,6 @@ public abstract class AbstractArchiver {
 
     protected abstract FileInputStream readFile(String filePath) throws FileNotFoundException;
 
-    protected abstract void archiveFile(String filePath,int archiveMode) throws IOException;
-    protected abstract AbstractArchivedFile dearchiveFile(String filePath) throws IOException, ClassNotFoundException;
+    public abstract void archiveFile(String filePath, int archiveMode) throws IOException;
+    public abstract void dearchiveFile(String filePath) throws IOException, ClassNotFoundException;
 }
