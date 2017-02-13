@@ -3,7 +3,7 @@ package logic;
 import java.io.Serializable;
 
 /**
- * Logic of arch
+ * Represents archived file.
  */
 public abstract class AbstractArchivedFile implements Serializable {
     protected String fileName;

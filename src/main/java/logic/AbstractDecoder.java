@@ -3,7 +3,7 @@ package logic;
 import model.polynomials.Polynomial;
 
 /**
- * Created by ${DPudov} on 05.12.2016.
+ * Base decoder.
  */
 public abstract class AbstractDecoder {
 

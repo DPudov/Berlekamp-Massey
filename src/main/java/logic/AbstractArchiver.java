@@ -7,7 +7,7 @@ import java.io.FileNotFoundException;
 import java.io.IOException;
 
 /**
- * Created by ${DPudov} on 15.11.2016.
+ * Base archiver.
  */
 public abstract class AbstractArchiver {
 
