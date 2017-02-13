@@ -8,9 +8,9 @@ import model.polynomials.PolynomialStorage;
  */
 public class BinaryArchivedFile extends AbstractArchivedFile {
 
-    private PolynomialStorage polynomialStorage;
+    private final PolynomialStorage polynomialStorage;
 
-    public BinaryArchivedFile(String fileName, String previousExtension, PolynomialStorage polynomialStorage, int archiveMode) {
+    public BinaryArchivedFile(String fileName, String previousExtension, PolynomialStorage polynomialStorage) {
         this.polynomialStorage = polynomialStorage;
         this.fileName = fileName;
         this.fileExtension = previousExtension;

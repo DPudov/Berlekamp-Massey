@@ -57,8 +57,8 @@ public class RegistryTest {
     public void berMastest()
 
     {
-        byte[] array = {0b1010101, 0b1010101, 0b1010101, 0b1010101};
-        byte[] array1 = {0b11111111111111111111111111111111, 0b11111111111111111111111111111111, 0b11111111111111111111111111111111, 0b11111111111111111111111111111111, 0b11111111111111111111111111111111};
+        byte[] array = {0b1101101} ;
+        byte[] array1 = {0, 0, 0, 0, 0};
         byte[] array2 = {0b001000001, 0b0001001101};
         byte[] array3 = {0, 0, 1, 0, 0, 1, 0, 0, 1};
         byte[] array4 = {1, 0, 0, 0, 1, 0, 0, 1, 1, 0, 1, 0, 1, 1, 1, 0};
@@ -70,6 +70,25 @@ public class RegistryTest {
 //        getFunctionFeedback(forBinaryField(array3));
 //        getFunctionFeedback(forBinaryField(array4));
 
+    }
+
+    @Test
+    public void decoderExpert() {
+        byte[] array = {0b1010101, 0b01010101, 0b01010101, 0b01010101};
+        BMAlgorithm algorithm = new BMAlgorithm(array);
+        byte[] feedback = algorithm.forBinaryField();
+        byte[] result = new byte[array.length];
+        int[] taps = {0};
+        byte[] initState = Arrays.copyOfRange(array, 0, feedback.length - 1);
+        BitSet init = BitSet.valueOf(initState);
+        int q = 0;
+        while (init.length() < array.length * 8) {
+            boolean next = init.get(taps[0]);
+            init.set(init.length(), next);
+            q++;
+        }
+        result = init.toByteArray();
+        System.out.println(Arrays.toString(result));
     }
 
     @Test

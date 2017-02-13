@@ -1,7 +1,7 @@
 package model.file;
 
 /**
- * Created by ${DPudov} on 04.12.2016.
+ * Archive modes.
  */
 public class ArchiveModes {
     public final static int MODE_BINARY = 2;

@@ -4,7 +4,7 @@ import java.util.Arrays;
 import java.util.BitSet;
 
 /**
- * Created by ${DPudov} on 11.09.2016.
+ * Byte management
  */
 public class BytesUtil {
 
@@ -18,7 +18,7 @@ public class BytesUtil {
         return bitSet.toByteArray();
     }
 
-    public static String convertByteToBits(byte b) {
+    private static String convertByteToBits(byte b) {
         boolean[] bits = new boolean[8];
         for (int i = bits.length - 1; i >= 0; i--) {
             bits[i] = (b % 2 == 1);
@@ -58,5 +58,26 @@ public class BytesUtil {
             result[i] = (byte) (set.get(i) ? 1 : 0);
         }
         return result;
+    }
+
+    public static byte[] bitsValueOf(byte[] someBytes) {
+        byte[] result = new byte[someBytes.length * 8];
+        for (int i = 0; i < someBytes.length; i++) {
+            byte current = someBytes[i];
+            for (int j = 7; j >= 0; j--) {
+                result[i * 8 + j] = (byte) (current % 2);
+                current /= 2;
+            }
+        }
+        return result;
+    }
+    public static byte[] reverse(byte[] array){
+        for(int i = 0; i < array.length / 2; i++)
+        {
+            byte temp = array[i];
+            array[i] = array[array.length - i - 1];
+            array[array.length - i - 1] = temp;
+        }
+        return array;
     }
 }

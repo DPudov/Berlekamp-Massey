@@ -22,17 +22,29 @@ public class BerlekampMasseyTest {
         System.out.println("Init length = " + arr.length);
         BMAlgorithm algorithm = new BMAlgorithm(arr);
         byte[] feedBack = BytesUtil.packArray(algorithm.forBinaryField());
+        System.out.println("Feedback = " + Arrays.toString(feedBack));
         Polynomial polynomial = new Polynomial(feedBack, arr.length, algorithm.getLinearSpan());
-        polynomial.setInitState(Arrays.copyOfRange(arr, arr.length-feedBack.length, arr.length));
+        System.out.println("Init state\n" + Arrays.toString(Arrays.copyOfRange(arr, 0, feedBack.length - 1)));
+        polynomial.setInitState(Arrays.copyOfRange(arr, 0, feedBack.length - 1));
 
         System.out.println("After achiving bytes:\n" + Arrays.toString(polynomial.getFeedbackArray()));
-        Decoder decoder = new Decoder();
         polynomial.unpack();
+        Decoder decoder = new Decoder();
         System.out.println("Polynomial length = " + polynomial.getLength());
         byte[] som = decoder.generateBytesForOne(polynomial);
-        System.out.println("After dearchiving:\n" + Arrays.toString(som));
+        byte[] etal = BytesUtil.unpackArray(arr);
+        byte[] real = BytesUtil.unpackArray(som);
+        int c = 0;
+        for (int i = 0; i< etal.length; i++){
+            if (etal[i] != real[i]){
+                c++;
+            }
+        }
+        System.out.println(c);
+        System.out.println("After dearchiving:\n" + Arrays.toString(BytesUtil.unpackArray(som)));
+        System.out.println(Arrays.toString(BytesUtil.unpackArray(arr)));
         System.out.println("Final length = " + som.length);
-        System.out.println("Your string is " + new String(decoder.generateBytesForOne(polynomial)));
+        System.out.println("Your string is " + new String(som));
 
     }
 
@@ -74,8 +86,8 @@ public class BerlekampMasseyTest {
         StringBuilder lsfr = new StringBuilder("1000");
         for (int i = 0; i < 10; i++) {
             System.out.println("Time " + i + ":\n " + lsfr.toString());
-            boolean b = (Integer.parseInt(String.valueOf(lsfr.charAt(2))) + Integer.parseInt(String.valueOf(lsfr.charAt(3))))% 2 == 1;
-            lsfr.insert(0, b?"1":"0");
+            boolean b = (Integer.parseInt(String.valueOf(lsfr.charAt(2))) + Integer.parseInt(String.valueOf(lsfr.charAt(3)))) % 2 == 1;
+            lsfr.insert(0, b ? "1" : "0");
         }
     }
 

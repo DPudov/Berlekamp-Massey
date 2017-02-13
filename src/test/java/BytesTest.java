@@ -1,5 +1,7 @@
+import model.utils.BytesUtil;
 import org.junit.Test;
 
+import java.util.Arrays;
 import java.util.BitSet;
 
 /**
@@ -37,5 +39,10 @@ public class BytesTest {
         return (arr[index] >> bitPosition & 1) == 1;
     }
 
+    @Test
+    public void testPacking() {
+    byte[] array = new byte[]{1, 0, 1, 0, 1, 0, 1, 0, 1, 1, 1, 1, 0, 0};
+        System.out.println(Arrays.toString(BytesUtil.packArray(array)));
+    }
 
 }

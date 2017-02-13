@@ -7,9 +7,9 @@ import java.io.Serializable;
 public class Polynomial implements Serializable {
     private byte[] initState;
     private byte[] feedbackArray;
-    private int length;
+    private final int length;
     //private byte[] initialState;
-    private int linearSpan;
+    private final int linearSpan;
 
     /**
      * General constructor

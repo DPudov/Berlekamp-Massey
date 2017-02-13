@@ -1,23 +1,26 @@
 import model.binary.BinaryArchiver;
-import model.file.ArchiveModes;
 
 import java.io.IOException;
 import java.util.Date;
+import java.util.logging.Logger;
 
 /**
- * Created by ${DPudov} on 11.09.2016.
+ * This class is useless, because it's only needed for some tests.
  */
 public class Main {
+    private static Logger logger = Logger.getLogger(Main.class.getName());
+
     public static void main(String[] args) {
         Date d1 = new Date();
         Date date = null;
         BinaryArchiver binaryArchiver = new BinaryArchiver();
         try {
-            binaryArchiver.archiveFile("C:\\Users\\DPudov\\Git\\ReleaseNotes.html", ArchiveModes.MODE_BINARY);
+            binaryArchiver.archiveFile("C:\\Users\\DPudov\\Git\\ReleaseNotes.html");
             date = new Date();
             binaryArchiver.dearchiveFile("C:\\Users\\мвидео\\IdeaProjects\\Berlekamp-Massey\\ReleaseNotes.html.bma");
-        } catch (IOException | ClassNotFoundException e) {
+        } catch (IOException e) {
             e.printStackTrace();
+        } catch (ClassNotFoundException ignored) {
         }
        /* Encoder encoder = new Encoder();
         FileManager fileManager = new FileManager();
@@ -30,9 +33,7 @@ public class Main {
             e.printStackTrace();
         }*/
 
-        Date d2 = new Date();
-
-        System.out.println((date.getTime() - d1.getTime()) + " milliseconds");
+        System.out.println(((date != null ? date.getTime() : 0) - d1.getTime()) + " milliseconds");
     }
 
 

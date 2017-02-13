@@ -3,18 +3,20 @@ package model.binary;
 import model.BMAlgorithm;
 import model.polynomials.Polynomial;
 import model.polynomials.PolynomialStorage;
+import model.utils.BytesUtil;
 
 import java.io.BufferedInputStream;
 import java.io.FileInputStream;
 import java.io.IOException;
 import java.io.InputStream;
 import java.util.Arrays;
+import java.util.logging.Logger;
 
 /**
- * Created by ${DPudov} on 13.09.2016.
+ * Class for encoding file with B. - Massey algorithm.
  */
 public class Encoder {
-    private final static String LINEAR_SPAN = "Linear span = ";
+    private static final Logger logger = Logger.getLogger(Encoder.class.getName());
 
     public Encoder() {
     }
@@ -22,30 +24,35 @@ public class Encoder {
     /**
      * 1. Get bytes stream of file
      * 2. Use Berlekamp-Massey
-     * 3. Write bytes to new file
+     * 3. Create polynomial with feedback made by BMAlgorithm.
+     * 4. Set initial state. It's the end of the buffer with length equal to feedback length.
      **/
-    public PolynomialStorage encode(String filePath, int lengthOfBuffer, int field) throws IOException {
+    public PolynomialStorage encode(String filePath) throws IOException {
         //open stream
         InputStream is = new BufferedInputStream(new FileInputStream(filePath));
         //init variables
         PolynomialStorage result = new PolynomialStorage();
-        result.setField(field);
+        result.setField();
         BMAlgorithm algorithm;
         //read data
 
         while (is.available() != 0) {
-            byte[] buffer = new byte[lengthOfBuffer];
+            byte[] buffer = new byte[256];
+
             int b = is.read(buffer);
-            if (b != 0) {
+            if (b < 256) {
+                algorithm = new BMAlgorithm(Arrays.copyOfRange(buffer, 0, b));
+                byte[] feedback = BytesUtil.packArray(algorithm.forBinaryField());
+                Polynomial p = new Polynomial(feedback, b, algorithm.getLinearSpan());
+                p.setInitState(Arrays.copyOfRange(buffer, buffer.length - feedback.length, buffer.length));
+            } else if (b != -1) {
                 algorithm = new BMAlgorithm(buffer);
-                byte[] feedback = algorithm.forBinaryField();
-                System.out.println(Arrays.toString(feedback));
-                System.out.println(algorithm.getLinearSpan());
+                byte[] feedback = BytesUtil.packArray(algorithm.forBinaryField());
+                logger.info("Feedback packed is " + Arrays.toString(feedback));
                 Polynomial p = new Polynomial(feedback,
                         b,
                         algorithm.getLinearSpan());
-                p.setInitState(Arrays.copyOfRange(buffer, 0, feedback.length  - 1));
-                //p.setInitialState(Arrays.copyOfRange(buffer, 0, ((algorithm.getLinearSpan() + 7) / 8)));
+                p.setInitState(Arrays.copyOfRange(buffer, buffer.length - feedback.length, buffer.length));
                 result.add(p);
             }
 
@@ -54,24 +61,4 @@ public class Encoder {
         return result;
     }
 
-    public static String getFunctionFeedback(byte[] feedbackArray) {
-        int j = 0;
-        StringBuilder builder = new StringBuilder();
-        for (byte b : feedbackArray) {
-            if (j < feedbackArray.length - 1) {
-                if (b == 1) {
-                    System.out.print(b + "x^(" + j + ") + ");
-                    builder.append(b).append("x^(").append(j).append(") + ");
-                }
-            } else {
-                if (b == 1) {
-                    System.out.print(b + "x^(" + j + ")");
-                    builder.append(b).append("x^(").append(j).append(")");
-                }
-            }
-            j++;
-        }
-        System.out.println();
-        return builder.toString();
-    }
 }

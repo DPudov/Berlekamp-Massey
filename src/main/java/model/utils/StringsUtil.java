@@ -1,7 +1,7 @@
 package model.utils;
 
 /**
- * Created by ${DPudov} on 13.09.2016.
+ * Class for bit's String representation
  */
 public class StringsUtil {
     private final static byte ONE = 1;
@@ -17,8 +17,7 @@ public class StringsUtil {
             } else if (wasOne || i == bits.length - 1)
                 builder.append(ZERO);
         }
-        String preResult = builder.toString();
-        return preResult;
+        return builder.toString();
     }
 
 

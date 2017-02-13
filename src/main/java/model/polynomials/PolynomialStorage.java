@@ -25,7 +25,7 @@ public class PolynomialStorage extends ArrayList<Polynomial> implements Serializ
         return field;
     }
 
-    public void setField(int field) {
-        this.field = field;
+    public void setField() {
+        this.field = model.file.ArchiveModes.MODE_BINARY;
     }
 }
